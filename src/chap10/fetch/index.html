@@ -4,8 +4,12 @@
     <title>JavaScript本格入門</title>
   </head>
   <body>
-    <input id='btn' type="button" value="do something"/>
-    <div id="result"></div>
+    <form id="myform">
+      <label for="name">Name: </label>
+      <input id="name" name="name" type="text" size="20"/>
+      <input id="btn" type="button" value="Send"/>
+    </form>
+    <p id="result"></p>
     <script type="text/javascript" src="./js/fetch_book.js"></script>
     <script type="text/javascript" src="./js/fetch_basic.js"></script>
   </body>
