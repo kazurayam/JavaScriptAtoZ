@@ -43,8 +43,8 @@ router.get(
   "/users/:userId/attachments/:attachmentId",
   async (r: Request, p: Record<string, string>) => {
     return new Response(
-      "Hello from /users/:userId handler, params=" +
-        Object.entries(p).join(", ") + "\n",
+      "Hello from /users/:userId handler; params=" +
+        Object.entries(p).join("; ") + "\n",
     );
   },
 );
@@ -62,15 +62,12 @@ router.patch(
   "/users/:userId",
   async (r: Request, p: Record<string, string>) => {
     return new Response(
-      "Hello from POST /users handler\n",
+      "Hello from PATCH /users handler\n",
     );
   },
 );
 
-//listenAndServe(":3000", async (r) => await router.route(r));
-
 async function reqHandler(req: Request) {
   return await router.route(req);
 }
-
 serve(reqHandler, { port: 3000 });
