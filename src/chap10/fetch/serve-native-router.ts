@@ -13,86 +13,56 @@ router.get("/",
   return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
 });
 
-router.get("/run-query",
-    async (r: Request, p: Record<string, string>) => {
-  const text = `Hello from /run-query`
-  return new Response(text, {headers:{"Content-Type": "text/plain; charset=utf-8"}});
+router.get("/run-query", async (r: Request, p: Record<string, string>) => {
+    const u = new URL(r.url);
+    const text = `Hello from ${u.searchParams.get('name')}`
+    return new Response(text, {headers:{"Content-Type": "text/plain; charset=utf-8"}});
 });
 
-router.post("/run-post",
-    async (r: Request, p: Record<string, string>) => {
-  const text = `Hello from /run-post`
-  return new Response(text, {headers:{"Content-Type": "text/plain; charset=utf-8"}});
+router.post("/run-post", async (r: Request, p: Record<string, string>) => {
+    try {
+        const formData = await r.formData();
+        logger.info("formData:", formData);
+        return new Response(`Hello, ${formData.get('name')}`,
+            { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+    } catch (e) {
+        logger.error(e.message);
+    }
 });
 
 router.get("/js/:jsfile",
-    async (r: Request, p: Record<string, string>) => {
-      logger.info(`p.jsfile: ${p.jsfile}`);
-      try {
+        async (r: Request, p: Record<string, string>) => {
+    logger.info(`p.jsfile: ${p.jsfile}`);
+    try {
         const js = await Deno.readTextFile(`js/${p.jsfile}`);
         return new Response(js, { headers: {"content-type": "text/javascript"}});
-      } catch (e) {
+    } catch (e) {
         logger.error(e.message);
-      }
+    }
 });
-/*
-router.get(
-  "/users/:userId",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from /users/:userId handler, params=" +
-        Object.entries(p).join(", ") + "\n",
-    );
-  },
-);
 
-router.put(
-  "/users",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from PUT /users handler\n",
-    );
-  },
-);
+// the doc of URLPattern --- https://developer.mozilla.org/en-US/docs/Web/API/URLPattern/URLPattern
+router.get("/:jsonfile.json",
+    async (r: Request, p: Record<string, string>) => {
+        logger.info(`jsonfile: ${p.jsonfile}`);
+        try {
+            const json = await Deno.readTextFile(`${p.jsonfile}.json`);
+            return new Response(json, { headers: {"content-type": "application/json"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
 
-router.put(
-  "/users/:userId/attachments",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from PUT /users/:userId/attachments handler, params=" +
-        Object.entries(p).join(", ") + "\n",
-    );
-  },
-);
-
-router.get(
-  "/users/:userId/attachments/:attachmentId",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from /users/:userId handler; params=" +
-        Object.entries(p).join("; ") + "\n",
-    );
-  },
-);
-
-router.post(
-  "/users",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from POST /users handler\n" ,
-    );
-  },
-);
-
-router.patch(
-  "/users/:userId",
-  async (r: Request, p: Record<string, string>) => {
-    return new Response(
-      "Hello from PATCH /users handler\n",
-    );
-  },
-);
-*/
+router.get("/:htmlfile.html",
+    async (r: Request, p: Record<string, string>) => {
+        logger.info(`htmlfile: ${p.htmlfile}`);
+        try {
+            const html = await Deno.readTextFile(`${p.htmlfile}.html`);
+            return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
 
 async function reqHandler(req: Request) {
   return await router.route(req);

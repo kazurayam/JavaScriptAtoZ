@@ -66,7 +66,7 @@ export class Router {
 
   async route(req: Request): Promise<Response> {
     console.log('')
-    console.log(`Request: ${req.method} ${req.url}`)
+    console.log(`[mod.ts#route] Request: ${req.method} ${req.url}`)
     for (const r of this.routes[req.method]) {
       if (r.pattern.test(req.url)) {
         const params = r.pattern.exec(req.url).pathname.groups;
