@@ -9,8 +9,7 @@ const logger = new Logger()
 
 const router = new Router();
 
-router.get("/",
-    async (req: Request, params: Record<string, string>) => {
+router.get("/", async (req: Request, params: Record<string, string>) => {
         // the name "params" is based on the famous JavaScript library
         // [path-to-regexp](https://github.com/pillarjs/path-to-regexp), which works
         // behind the URLPattern class
@@ -18,7 +17,25 @@ router.get("/",
   return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
 });
 
-router.get("/fetch_query", async (req: Request, params: Record<string, string>) => {
+
+router.get("/bookmark", async (req: Request, params: Record<string, string>) => {
+    try {
+        const u = new URL(req.url);
+        const bookmarkUrl = u.searchParams.get('url');
+        logger.info(`bookmarkUrl : ${bookmarkUrl}`);
+        let params = new URLSearchParams();
+        params.set('url', bookmarkUrl);
+        let text = '';
+        const resp = await fetch(`https://b.hatena.ne.jp/entry/jsonlite/?${params.toString()}`).
+            then(res => res.text());
+        return new Response(resp, 
+            { headers:{"Content-Type": "application/json"}});
+    } catch (e) {
+        logger.error(e.message);
+    }
+});
+
+router.get("/fetch_basic", async (req: Request, params: Record<string, string>) => {
     try {
         const u = new URL(req.url);
         const name = u.searchParams.get('name');
@@ -82,8 +99,7 @@ router.get("/js/:jsfile", async (req: Request, params: Record<string, string>) =
 });
 
 // the doc of URLPattern --- https://developer.mozilla.org/en-US/docs/Web/API/URLPattern/URLPattern
-router.get("/:jsonfile.json",
-    async (req: Request, params: Record<string, string>) => {
+router.get("/:jsonfile.json", async (req: Request, params: Record<string, string>) => {
         logger.info(`jsonfile: ${params.jsonfile}`);
         try {
             const json = await Deno.readTextFile(`${params.jsonfile}.json`);
@@ -93,8 +109,7 @@ router.get("/:jsonfile.json",
         }
     });
 
-router.get("/:htmlfile.html",
-    async (r: Request, params: Record<string, string>) => {
+router.get("/:htmlfile.html", async (req: Request, params: Record<string, string>) => {
         logger.info(`htmlfile: ${params.htmlfile}`);
         try {
             const html = await Deno.readTextFile(`${params.htmlfile}.html`);
@@ -103,6 +118,7 @@ router.get("/:htmlfile.html",
             logger.error(e.message);
         }
     });
+
 
 async function reqHandler(req: Request) {
     console.log(`\n[serve.ts#reqHandler] Request:  ${req.method} ${req.url}`);
