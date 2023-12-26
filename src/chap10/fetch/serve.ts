@@ -13,18 +13,44 @@ router.get("/",
   return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
 });
 
-router.get("/run-query", async (r: Request, p: Record<string, string>) => {
-    const u = new URL(r.url);
-    const text = `Hello from ${u.searchParams.get('name')}`
-    return new Response(text, {headers:{"Content-Type": "text/plain; charset=utf-8"}});
+router.get("/fetch_query", async (r: Request, p: Record<string, string>) => {
+    try {
+        const u = new URL(r.url);
+        const name = u.searchParams.get('name');
+        let text = '';
+        if (name !== '') {
+            text = `こんにちは、${name}さん！`
+        }
+        return new Response(text, 
+            { headers:{"Content-Type": "text/plain; charset=utf-8"}});
+    } catch (e) {
+        logger.error(e.message);
+    }
 });
 
-router.post("/run-post", async (r: Request, p: Record<string, string>) => {
+router.post("/fetch_post", async (r: Request, p: Record<string, string>) => {
     try {
         const formData = await r.formData();
-        logger.info("formData:", formData);
-        return new Response(`Hello, ${formData.get('name')}`,
+        const name = formData.get('name');
+        let text = '';
+        if (name !== '') {
+            text = `こんにちは、${formData.get('name')}さん！`
+        }
+        return new Response(text, 
             { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+    } catch (e) {
+        logger.error(e.message);
+    }
+});
+
+// https://medium.com/deno-the-complete-reference/handle-file-uploads-in-deno-ee14bd2b16d9
+router.post("/fetch_upload", async (r: Request, p: Record<string, string>) => {
+    try {
+        const formData = await r.formData();
+        const upfile = formData.get('upfile');
+        // save the file into disk
+        return new Response("accepted uploaded file",
+            { headers: { "Content-Type": "text/plain: charset=utf-8" } });
     } catch (e) {
         logger.error(e.message);
     }
