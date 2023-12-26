@@ -1,0 +1,10 @@
+------WebKitFormBoundaryLBcBxuZ8Rnr0l1Sj
+Content-Disposition: form-data; name="upfile"; filename="book.json"
+Content-Type: application/json
+
+{
+  "title": "JavaScript本格入門",
+  "price": 3200,
+  "publisher": "技術評論社"
+}
+------WebKitFormBoundaryLBcBxuZ8Rnr0l1Sj--

@@ -1,1 +1,0 @@
-curl -v http://localhost:5001/ -X GET 
