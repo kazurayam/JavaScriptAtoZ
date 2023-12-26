@@ -65,7 +65,6 @@ export class Router {
   }
 
   async route(req: Request): Promise<Response> {
-    console.log('')
     console.log(`[mod.ts#route] Request: ${req.method} ${req.url}`)
     for (const r of this.routes[req.method]) {
       if (r.pattern.test(req.url)) {
@@ -73,7 +72,7 @@ export class Router {
         try {
           return await r["handler"](req, params);
         } catch (err) {
-          console.trace('HTTP Status: 500')
+          console.trace(`HTTP Status: 500; ${err}` )
           return new Response(null, { status: 500 });
         }
       }
