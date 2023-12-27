@@ -65,10 +65,25 @@ router.post("/fetch_post", async (req: Request, params: Record<string, string>) 
     }
 });
 
+router.get("/fetch_query", async (req: Request, params: Record<string, string>) => {
+    try {
+        const u = new URL(req.url);
+        const name = u.searchParams.get('name');
+        let text = '';
+        if (name !== '') {
+            text = `こんにちは、${name}さん！`
+        }
+        return new Response(text, 
+            { headers:{"Content-Type": "text/plain; charset=utf-8"}});
+    } catch (e) {
+        logger.error(e.message);
+    }
+});
+
 // https://medium.com/deno-the-complete-reference/handle-file-uploads-in-deno-ee14bd2b16d9
 router.post("/fetch_upload", async (req: Request, params: Record<string, string>) => {
     logger.info(`/fetch_upload ${req.url}`)
-    const SAVE_PATH = './uploaded';
+    const SAVE_PATH = './uploaded/';
     try {
         const url = new URL(req.url);
         const fileName = url.searchParams.get("filename") || crypto.randomUUID();
@@ -88,10 +103,10 @@ router.post("/fetch_upload", async (req: Request, params: Record<string, string>
     }
 });
 
-router.get("/js/:jsfile", async (req: Request, params: Record<string, string>) => {
+router.get("/scripts/:jsfile", async (req: Request, params: Record<string, string>) => {
     logger.info(`params.jsfile: ${params.jsfile}`);
     try {
-        const js = await Deno.readTextFile(`js/${params.jsfile}`);
+        const js = await Deno.readTextFile(`scripts/${params.jsfile}`);
         return new Response(js, { headers: {"content-type": "text/javascript"}});
     } catch (e) {
         logger.error(e.message);
