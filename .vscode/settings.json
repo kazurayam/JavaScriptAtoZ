@@ -2,5 +2,6 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.unstable": true,
-  "mojo.modularHomePath": "/Users/kazuakiurayama/.modular"
+"mojo.modularHomePath": "/Users/kazuakiurayama/.modular",
+"asciidoc.antora.enableAntoraSupport": false
 }

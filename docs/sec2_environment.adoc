@@ -1,0 +1,15 @@
+== Denoで動かすJupyterプロジェクト
+
+
+Denoをインストールする
+
+Pythonをインストールする
+
+Jupyterをインストールする
+
+VSCodeをインストールする
+
+Deno for Jupyterをインストールする
+
+
+- link:https://qiita.com/KokiSakano/items/60c53a1b1b113d3711c2[Denoで動かすJupyterプロジェクト](Qiita, @KokiSakano)
