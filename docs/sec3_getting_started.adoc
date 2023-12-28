@@ -8,16 +8,16 @@ VSCodeを起動し適当なフォルダを開く。そこにNotebookを作る。
 
 [source]
 ----
-console.log("Hello, Jupyter in VSCode");
+console.log("Hello, world!");
 ----
 
 と入力したとする。すると次のような画面になるだろう。
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_still_Python_kernel_is_appointed.png[]
 
-上のスクリーンショットをみると、JupyterがこのNotebookのためにPythonのカーネルを採用していることがわかる。また `console.log(...)` というコードをではなくてPythonのコードだと誤って認識している、ということがわかる。これではまずい。JupyterがこのNotebookのためにDenoをカーネルとして採用するよう変更する必要がる。どうすればいいのか？以下に手順を示す。
+上のスクリーンショットをみると、JupyterがこのNotebookのためにPythonのカーネルを採用していることがわかる。また `console.log(...)` というコードをPythonのコードだと認識している、ということがわかる。これではまずい。JupyterがこのNotebookのためにDenoをカーネルとして採用するよう変更することが必要だ。どうすればいいのか？以下に手順を示す。
 
-カーネル名をマウスでクリックするとドロップダウンが開く。このドロップダウンのなかに Select Another Kernel... というメニューが現れるはずだ。
+現状このNotebookが採用しているカーネル名が表示されている箇所をマウスでクリックするとドロップダウンが開く。このドロップダウンのなかに Select Another Kernel... というメニューが現れるはずだ。
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.2_Select_Another_Kernel.png[]
 
@@ -40,4 +40,9 @@ image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_settings_completed.p
 Hello, world!
 ----
 
-と表示されるはずだ。これでVSCodeのなかでJupyterを動かし、TypeScriptのコードを書き、Denoカーネルで実行できるようになった。
+と表示されるはずだ。こんなふうに。
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Hello.png[]
+
+
+以上で、VSCodeのなかでJupyterを動かし、TypeScriptのコードを書き、Denoカーネルで実行できるようになった。
