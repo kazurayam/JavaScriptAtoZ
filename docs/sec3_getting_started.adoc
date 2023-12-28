@@ -40,6 +40,4 @@ image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_settings_completed.p
 Hello, world!
 ----
 
-と表示されるはずだ。
-
-これでVSCodeのなかでJupyterでTypeScriptのコードを作り、Denoカーネルで実行できるようになった。
+と表示されるはずだ。これでVSCodeのなかでJupyterを動かし、TypeScriptのコードを書き、Denoカーネルで実行できるようになった。
