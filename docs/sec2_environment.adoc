@@ -1,13 +1,18 @@
-== Denoで動かすJupyterプロジェクト
+== 環境を構築する
+
+=== 前提
+
+1. わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。
+
+2. Python 3がインストール済みであると仮定します。
+
+3. Jupyter Notebookがインストール済みであると仮定します。
+
+4. Microsoft Visual Studio Codeがインストール済みであると仮定します。
+
 
 
 Denoをインストールする
-
-Pythonをインストールする
-
-Jupyterをインストールする
-
-VSCodeをインストールする
 
 Deno for Jupyterをインストールする
 
