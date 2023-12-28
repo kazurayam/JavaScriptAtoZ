@@ -1,4 +1,4 @@
-= [Deno] JavaScriptのFetch APIを学ぶためにDenoとJupyterでWebサーバを作った話
+= VSCodeでJavaScriptのFetch APIを学ぶためにDenoとJupyterでWebサーバを作った話
 
 :projectVersion: 0.0.0
 

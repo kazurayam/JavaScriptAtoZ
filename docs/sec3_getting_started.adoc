@@ -1,0 +1,4 @@
+== 最初の一歩: VSCodeのなかJupyterでTypeScriptコードを書きDenoで実行しよう
+
+VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。
+

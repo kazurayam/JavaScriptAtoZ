@@ -1,3 +1,34 @@
 - Table of contents
 {:toc}
 
+# VSCodeでJavaScriptのFetch APIを学ぶためにDenoとJupyterでWebサーバを作った話
+
+## 動機
+
+わたしは [Deno](https://deno.com/) を触り始めてまだ１ヶ月の初心者ですDenoについてちょっと書きます。最初に動機を述べます。
+
+第一の動機。2023年12月、わたしは書籍 [《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）を読んだ。わたしは長いあいだJavaScriptをちゃんと学習せず **とりあえず動いた** で立ち止まっていた。この本を通読して古びない本質を習得できたとおもう。ただしひとつだけ引っ掛かるところがあった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、本格本はPHP言語によるWebサーバの実装例を紹介している。残念ながらわたしはPHPがわからない。JavaScriptを学ぶのにPHPに寄り道するのはしんどいなあ …​ そうだ、[Deno](https://qiita.com/search?q=Deno) があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
+
+第二の動機。2023年9月にDeno 1.37がリリースされて、JupyterカーネルとしてDenoが選べるようになった。
+
+-   [Deno 1.37: Modern JavaScript in Jupyter Notebooks](https://deno.com/blog/v1.37)
+
+VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができる。DenoがJupyterカーネルとして使えるということは、ipynbファイルにTypeScriptのコードを書き、素早く実行して、結果をJupyterのなかで見ることができるわけだ。これは魅力的だ。だからJupyterカーネルとしてのDenoを試してみよう。
+
+## 環境を構築する
+
+### 前提
+
+1.  わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。
+
+2.  Python 3がインストール済みであると仮定します。
+
+3.  Jupyter Notebookがインストール済みであると仮定します。
+
+4.  Microsoft Visual Studio Codeがインストール済みであると仮定します。
+
+Denoをインストールする
+
+Deno for Jupyterをインストールする
+
+-   [Denoで動かすJupyterプロジェクト](https://qiita.com/KokiSakano/items/60c53a1b1b113d3711c2)(Qiita, @KokiSakano)

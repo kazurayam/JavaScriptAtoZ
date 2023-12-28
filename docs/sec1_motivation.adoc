@@ -1,13 +1,15 @@
 == 動機
 
-わたしは link:https://deno.com/[Deno] を触り始めてまだ１ヶ月の初心者です。Denoについてちょっと書きます。最初に動機を述べます。
+わたしは link:https://deno.com/[Deno] を触り始めてまだ１ヶ月の初心者です。Denoについてメモを書きます。最初に動機を述べます。
 
-第一の動機。2023年12月、わたしは書籍 link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）を読んだ。わたしは長いあいだJavaScriptをちゃんと学習せず *とりあえず動いた* で立ち止まっていた。この本を通読して古びない本質を習得できたとおもう。ただしひとつだけ引っ掛かるところがあった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、本格本はPHP言語によるWebサーバの実装例を紹介している。残念ながらわたしはPHPがわからない。JavaScriptを学ぶのにPHPに寄り道するのはしんどいなあ ... そうだ、link:https://qiita.com/search?q=Deno[Deno] があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
+第一の動機。わたしは長いあいだJavaScriptをちゃんと学習せず *とりあえず動いた* で立ち止まっていた。2023年12月、わたしは書籍 
+
+- link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）
+
+を読んだ。この本を読んでJavaScriptを一歩深く学ぶことができた。ただし本格本に引っ掛かるところがあった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、本格本はPHP言語によるWebサーバの実装例を紹介していた。残念ながらわたしはPHPがわからない。JavaScriptを学ぶのにPHPに寄り道するのはつらい ... そうだ、link:https://qiita.com/search?q=Deno[Deno] があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
 
 第二の動機。2023年9月にDeno 1.37がリリースされて、JupyterカーネルとしてDenoが選べるようになった。
 
 - link:https://deno.com/blog/v1.37[Deno 1.37: Modern JavaScript in Jupyter Notebooks]
 
-VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができる。DenoがJupyterカーネルとして使えるということは、ipynbファイルにTypeScriptのコードを書き、素早く実行して、結果をJupyterのなかで見ることができるわけだ。これは魅力的だ。だからJupyterカーネルとしてのDenoを試してみよう。
-
-
+VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができるのだが、DenoがJupyterカーネルとして使えるということは、\*.ipynb ファイルにTypeScriptのコードを書き、Ctrl+Enterで素早く実行して、stdoutとstderrorをJupyterのなかで見ることができる。この道具立ては魅力的だ。Jupyterカーネルとしての Deno をやってみよう。

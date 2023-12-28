@@ -1,20 +1,105 @@
-== 環境を構築する
+== 作業環境を作る
 
-=== 前提
+=== 前提する環境
 
-1. わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。
+わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。WindowsでもLinuxでも同じことができるはずですが、わたしは検証していません。以下のツールがインストール済みで実行可能であると仮定します。
 
-2. Python 3がインストール済みであると仮定します。
+1. Pythonが使えること
+[source]
+----
+$ python --version
+Python 3.11.5
+----
 
-3. Jupyter Notebookがインストール済みであると仮定します。
+2. Jupyter Notebookが使えること
+[source]
+----
+$ jupyter --version
+Selected Jupyter core packages...
+IPython          : 8.18.1
+ipykernel        : 6.27.1
+ipywidgets       : not installed
+jupyter_client   : 8.6.0
+jupyter_core     : 5.5.0
+jupyter_server   : 2.12.0
+jupyterlab       : 4.0.9
+nbclient         : 0.9.0
+nbconvert        : 7.12.0
+nbformat         : 5.9.2
+notebook         : 7.0.6
+qtconsole        : not installed
+traitlets        : 5.13.0
+----
 
-4. Microsoft Visual Studio Codeがインストール済みであると仮定します。
+3. Microsoft Visual Studio Codeが使えること、VSCodeに link:https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter[Jupyter拡張]がインストール済みであること
+
+だからあなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される、という状態すなわち下記のような環境がすでにあると仮定します。
+
+image::https://kazurayam.github.io/JavaScriptAtoZ/images/1_Jupyter_Python_VSCode.png[]
+
+=== Denoの本体をインストールする
+
+Denoの本家サイト link:https://deno.com/[deno.com] にインストール方法が説明されているのでそれに従ってDenoをインストールします。わたしはMacなのでHomebrewでやりました。
+
+[source]
+----
+$ brew install deno
+----
+
+コマンドラインで `deno` コマンドが使えるようになるはずです。確かめましょう。
+
+[source]
+----
+$ deno --version
+deno 1.39.1 (release, aarch64-apple-darwin)
+v8 12.0.267.8
+typescript 5.3.3
+----
+
+JupyterでDenoを使うにはdeno 1.37以降が必要です。
+
+=== VSCodeにDeno Extensionをインストールする
+
+VSCodeのなかでTypeScriptコードをDenoで実行したい。そのためにはVSCodeに拡張をインストールする必要があります。ドキュメントはこちら:
+
+- link:https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno[Deno - Visual Studio Marketplace]
+
+使い方がこのように説明されている。
+
+[source]
+----
+# Usage
+1. Install the Deno CLI.
+2. Install this extension.
+3. Ensure deno is available in the environment path, or set its path via the deno.path setting in VSCode.
+4. Open the VS Code command palette with Ctrl+Shift+P, and run the Deno: Initialize Workspace Configuration command.
+----
+
+項番4として "run the Deno: Initialize Workspace Configuraiton Command" と書いてあるがこれでは何のことやら。すこし先にこう書いてある。
+
+[quote]
+____
+We recognize that not every TypeScript/JavaScript project that you might work on in VSCode uses Deno — therefore, by default, this extension will only apply the Deno language server when the setting deno.enable is set to true. This can be done via editing the settings or using the command Deno: Initialize Workspace Configuration.
+
+While you can enable Deno globally, you probably only want to do that if every JavaScript/TypeScript workspace you work on in VSCode is a Deno based one.
+____
+
+つまり、TypeScript含むプロジェクトをVSCodeで開いたとき、そのプロジェクトにおいてあなたがDenoを使うとはかぎらない、とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にしよう。これをやってはじめてVSCodeとDenoの連携が有効化される。
+
+image::https://kazurayam.github.io/JavaScriptAtoZ/images/2_VSCode_Settings_Deno.Enable.png[]
 
 
+=== Jupyter連携モジュールをDenoに追加する
 
-Denoをインストールする
+前述のとおりVSCodeのなかでDenoを使えるようにした。さらに一歩進んでVSCodeの中で動くJupyterがDenoをカーネルの一つとして使えるようにしたい。そのためにはDenoに拡張モジュールを追加する必要があります。わたしはこうやりました。
 
-Deno for Jupyterをインストールする
+[source]
+----
+$ deno jupyter --unstable --install
+----
 
+下記のQiita記事を参考にしました。
 
 - link:https://qiita.com/KokiSakano/items/60c53a1b1b113d3711c2[Denoで動かすJupyterプロジェクト](Qiita, @KokiSakano)
+
+
