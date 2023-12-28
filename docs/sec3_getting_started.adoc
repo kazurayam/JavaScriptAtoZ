@@ -14,8 +14,3 @@ image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Select_Deno.png[]
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.7_settings_completed.png[]
 
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/3.7.png[]
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/3..png[]
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/3..png[]

@@ -4,14 +4,15 @@
 
 わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。WindowsでもLinuxでも同じことができるはずですが、わたしは検証していません。以下のツールがインストール済みで実行可能であると仮定します。
 
-1. Pythonが使えること
+1. Pythonがインストール済み
 [source]
 ----
 $ python --version
 Python 3.11.5
 ----
 
-2. Jupyter Notebookが使えること
+2. Jupyter Notebookがインストール済み
+
 [source]
 ----
 $ jupyter --version
@@ -31,9 +32,11 @@ qtconsole        : not installed
 traitlets        : 5.13.0
 ----
 
-3. Microsoft Visual Studio Codeが使えること、VSCodeに link:https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter[Jupyter拡張]がインストール済みであること
+3. Microsoft Visual Studio Codeがインストール済み
 
-だからあなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される、という状態すなわち下記のような環境がすでにあると仮定します。
+4. VSCodeに link:https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter[Jupyter拡張]がインストール済み
+
+ということはつまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される、という状態すなわち下記のような環境がすでにあると仮定します。
 
 image::https://kazurayam.github.io/JavaScriptAtoZ/images/1_Jupyter_Python_VSCode.png[]
 
