@@ -13,9 +13,42 @@ router.get("/", async (req: Request, params: Record<string, string>) => {
         // the name "params" is based on the famous JavaScript library
         // [path-to-regexp](https://github.com/pillarjs/path-to-regexp), which works
         // behind the URLPattern class
-  const html = await Deno.readTextFile("./index.html");
-  return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
+    const html = await Deno.readTextFile("./index.html");
+    return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
 });
+
+
+router.get("/:htmlfile.html", async (req: Request, params: Record<string, string>) => {
+    logger.info(`htmlfile: ${params.htmlfile}`);
+    try {
+        const html = await Deno.readTextFile(`${params.htmlfile}.html`);
+        return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
+    } catch (e) {
+        logger.error(e.message);
+    }
+});
+
+router.get("/scripts/:jsfile", async (req: Request, params: Record<string, string>) => {
+    logger.info(`params.jsfile: ${params.jsfile}`);
+    try {
+        const js = await Deno.readTextFile(`scripts/${params.jsfile}`);
+        return new Response(js, { headers: {"content-type": "text/javascript"}});
+    } catch (e) {
+        logger.error(e.message);
+    }
+});
+
+
+// the doc of URLPattern --- https://developer.mozilla.org/en-US/docs/Web/API/URLPattern/URLPattern
+router.get("/:jsonfile.json", async (req: Request, params: Record<string, string>) => {
+        logger.info(`jsonfile: ${params.jsonfile}`);
+        try {
+            const json = await Deno.readTextFile(`${params.jsonfile}.json`);
+            return new Response(json, { headers: {"content-type": "application/json"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
 
 
 router.get("/bookmark", async (req: Request, params: Record<string, string>) => {
@@ -102,37 +135,6 @@ router.post("/fetch_upload", async (req: Request, params: Record<string, string>
         logger.error(e.message);
     }
 });
-
-router.get("/scripts/:jsfile", async (req: Request, params: Record<string, string>) => {
-    logger.info(`params.jsfile: ${params.jsfile}`);
-    try {
-        const js = await Deno.readTextFile(`scripts/${params.jsfile}`);
-        return new Response(js, { headers: {"content-type": "text/javascript"}});
-    } catch (e) {
-        logger.error(e.message);
-    }
-});
-
-// the doc of URLPattern --- https://developer.mozilla.org/en-US/docs/Web/API/URLPattern/URLPattern
-router.get("/:jsonfile.json", async (req: Request, params: Record<string, string>) => {
-        logger.info(`jsonfile: ${params.jsonfile}`);
-        try {
-            const json = await Deno.readTextFile(`${params.jsonfile}.json`);
-            return new Response(json, { headers: {"content-type": "application/json"}});
-        } catch (e) {
-            logger.error(e.message);
-        }
-    });
-
-router.get("/:htmlfile.html", async (req: Request, params: Record<string, string>) => {
-        logger.info(`htmlfile: ${params.htmlfile}`);
-        try {
-            const html = await Deno.readTextFile(`${params.htmlfile}.html`);
-            return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
-        } catch (e) {
-            logger.error(e.message);
-        }
-    });
 
 
 async function reqHandler(req: Request) {

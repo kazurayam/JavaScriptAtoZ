@@ -66,18 +66,18 @@ export class Router {
 
   async route(req: Request): Promise<Response> {
     console.log(`[mod.ts#route] Request: ${req.method} ${req.url}`)
-    for (const r of this.routes[req.method]) {
-      if (r.pattern.test(req.url)) {
-        const params = r.pattern.exec(req.url).pathname.groups;
+    for (const rt of this.routes[req.method]) {
+      if (rt.pattern.test(req.url)) {
+        const params = rt.pattern.exec(req.url).pathname.groups;
         try {
-          return await r["handler"](req, params);
+          return await rt["handler"](req, params);
         } catch (err) {
-          console.trace(`HTTP Status: 500; ${err}` )
+          console.trace(`[native-router/mod.ts] responding with HTTP Status: 500; ${err}` )
           return new Response(null, { status: 500 });
         }
       }
     }
-    console.log('HTTP Status: 404');
+    console.log('[native-router/mod.ts] responding HTTP Status: 404');
     return new Response(null, { status: 404 });
   }
 }
