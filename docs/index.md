@@ -115,16 +115,22 @@ VSCodeのなかでTypeScriptコードをDenoで実行したい。そのために
 
 ## 最初の一歩: VSCodeのなかJupyterでTypeScriptコードを書きDenoで実行しよう
 
-VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。
+VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。手順を説明しよう。
 
-![4.1 Jupyter Python VSCode](https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_Python_VSCode.png)
+VSCodeを起動し適当なフォルダを開く。そこにNotebookを作る。ファイル名はなんでもいいのだがここでは `test.ipynb` としよう。`ipynb` ファイルをダブルクリックするとJupyterが立ち上がり、Notebookを編集可能な状態になる。
 
-![4.3 Jupyter still Python kernel is appointed](https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Jupyter_still_Python_kernel_is_appointed.png)
+セルにTypeScriptコードを入力しよう。なんでもいいのだがここでは
 
-![4.4 Select Another Kernel](https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Another_Kernel.png)
+    console.log("Hello, Jupyter in VSCode");
 
-![4.5 Select Jupyter Kernel](https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_Select_Jupyter_Kernel.png)
+と入力したとする。すると次のような画面になるだろう。
 
-![4.6 Select Deno](https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Select_Deno.png)
+![4.1 Jupyter still Python kernel is appointed](https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_still_Python_kernel_is_appointed.png)
 
-![4.7 settings completed](https://kazurayam.github.io/JavaScriptAtoZ/images/4.7_settings_completed.png)
+![4.2 Select Another Kernel](https://kazurayam.github.io/JavaScriptAtoZ/images/4.2_Select_Another_Kernel.png)
+
+![4.3 Select Jupyter Kernel](https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Select_Jupyter_Kernel.png)
+
+![4.4 Select Deno](https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Deno.png)
+
+![4.5 settings completed](https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_settings_completed.png)

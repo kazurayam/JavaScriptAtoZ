@@ -15,17 +15,11 @@ console.log("Hello, Jupyter in VSCode");
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_still_Python_kernel_is_appointed.png[]
 
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.2_Select_Another_Kernel.png[]
 
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Select_Jupyter_Kernel.png[]
 
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Jupyter_still_Python_kernel_is_appointed.png[]
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Deno.png[]
 
-=== 
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Another_Kernel.png[]
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_Select_Jupyter_Kernel.png[]
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Select_Deno.png[]
-
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.7_settings_completed.png[]
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_settings_completed.png[]
 
