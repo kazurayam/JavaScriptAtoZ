@@ -1,10 +1,25 @@
 == 最初の一歩: VSCodeのなかJupyterでTypeScriptコードを書きDenoで実行しよう
 
-VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。
+VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。手順を説明しよう。
 
-image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_Python_VSCode.png[]
+VSCodeを起動し適当なフォルダを開く。そこにNotebookを作る。ファイル名はなんでもいいのだがここでは `test.ipynb` としよう。`ipynb` ファイルをダブルクリックするとJupyterが立ち上がり、Notebookを編集可能な状態になる。
+
+セルにTypeScriptコードを入力しよう。なんでもいいのだがここでは
+
+[source]
+----
+console.log("Hello, Jupyter in VSCode");
+----
+
+と入力したとする。すると次のような画面になるだろう。
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_still_Python_kernel_is_appointed.png[]
+
+
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Jupyter_still_Python_kernel_is_appointed.png[]
+
+=== 
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Another_Kernel.png[]
 
