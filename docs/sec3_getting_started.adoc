@@ -2,3 +2,20 @@
 
 VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。
 
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.1_Jupyter_Python_VSCode.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.3_Jupyter_still_Python_kernel_is_appointed.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.4_Select_Another_Kernel.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.5_Select_Jupyter_Kernel.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Select_Deno.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.7_settings_completed.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/3.7.png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/3..png[]
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/3..png[]

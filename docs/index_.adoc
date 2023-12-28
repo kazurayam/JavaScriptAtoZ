@@ -5,3 +5,6 @@
 include::sec1_motivation.adoc[]
 
 include::sec2_environment.adoc[]
+
+include::sec3_getting_started.adoc[]
+
