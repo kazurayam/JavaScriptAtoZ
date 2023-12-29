@@ -197,13 +197,21 @@ Denoをカーネルとして選択しよう。すると `console.log(…​)` �
 
 ### 最初の一歩
 
-VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、CTRLとENTERキーを同時に押してTypeScriptを実行してみよう。
+VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、こういうTypeScriptコードを書いた。
+
+    const response = await fetch("http://localhost:3000/hello");
+    if (response.status === 200) {
+        const text = await response.text();
+        console.log(text);
+    } else {
+        console.log(response);
+    }
+
+Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあげる。応答を受けとったらHTTPステータスを調べる。ステータスが200正常ならば応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。やっていることは以上。CTRLとENTERキーを同時に押して実行してみよう。
 
 ![5.1 Simplest Request and Response failure](https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png)
 
-エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったから。
-
-では Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+エラーになりました。まだWebサーバを立ち上げていなかったから。では Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
     $ cd <プロジェクトのディレクトリ>/src/chap10/fetch
     $ ./appstart.sh
@@ -214,11 +222,13 @@ VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイル�
 
 ![5.2 Simplest Request and Response success](https://kazurayam.github.io/JavaScriptAtoZ/images/5.2_Simplest_Request_and_Response_success.png)
 
-今度は、Webサーバが応答してくれました。
+今度は、Webサーバが "Hello" と応答してくれました。
 
-Webサーバをどうやって停止するか？ `appstart.sh` を実行したTerminalウインドウでCTRLキーとCキーを押下します。
+Webサーバをどうやって停止するか？ `./appstart.sh` を実行したのと同じTerminalウインドウで CTRLキーとCキーを押下してプロセスをkillします。
 
 ### Webサーバのソースコードを読む
+
+`http://localhost:3000/hello` をGETするHTTPリクエストに応答したのはTypeスクリプト `app.ts` の下記の部分です。
 
     // https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae
     import { Router } from "./native-router/mod.ts";
@@ -238,9 +248,65 @@ Webサーバをどうやって停止するか？ `appstart.sh` を実行したTe
     });
 
 
-        const html = await Deno.readTextFile(`${params.filename}.json`);
-        return new Response(html, { headers: {"content-type": "application/json; charset=utf-8"}});
-    });
-
     async function reqHandler(req: Request) {
         console.log(`\n[serve.ts#reqHandler] Request:  ${req.method} ${req.url}`);
+        return await router.route(req);
+    }
+    serve(reqHandler, { port: 3000 });
+
+`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` というメッセージを応答する、ただそれだけのことをしています。
+
+### Deno native-router
+
+`app.ts` は `./native-router/mod.ts` というコードをimportして利用しています。このコードは下記のサイトからダウンロードしました。
+
+-   <https://deno.land/x/nativerouter@1.0.0>
+
+記事 [Native Router in Deno](https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae)が Deno native-routerを 解説しています。わたしはこの記事を読み `./native-router/mod.ts` を利用して `app.ts` を書きました。以下、`app.ts` のコードについて説明していきます。
+
+### パラメータつきGETリクエストに応答する
+
+-   Webサーバ `app.ts` のコード
+
+<!-- -->
+
+    router.get("/hello", async (req: Request, params: Record<string, string>) => {
+        let text = 'Hello';
+        const u = new URL(req.url);
+        const name = u.searchParams.get('name');
+        if (name !== null) {
+            text = `Hello, ${name}!`
+        }
+        return new Response(text, 
+                            { headers:{"Content-Type": "text/plain; charset=utf-8"}});
+    });
+
+Requestのなかに `?name=値` の形で埋め込まれた値を取り出しています。URL文字列を [`URL`](https://deno.land/api@v1.39.1?s=URL) に変換し、`searchParams` プロパティのなかから `name` プロパティの値を取り出しています。
+
+-   クライアント `apptest.ipynb` のコード
+
+<!-- -->
+
+    const response = await fetch("http://localhost:3000/hello?name=decoy");
+    if (response.status === 200) {
+        const text = await response.text();
+        console.log(text);
+    } else {
+        console.log(response);
+    }
+
+-   クライアントを実行した結果
+
+<!-- -->
+
+    Hello, decoy
+
+### パラメータつきPOSTリクエストに応答する
+
+### URLのPathがパラメータ化されているリクエストに応答する
+
+### HTMLファイルを応答する
+
+### JSファイルを応答する
+
+### JSONファイルを応答する
