@@ -86,13 +86,15 @@ include::../src/chap10/fetch/app.ts[lines=54..59]
 
 `"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` というメッセージを応答する、ただそれだけのことをしています。
 
-==== Deno Native Routerライブラリ
+==== Native Routerライブラリ in Deno
 
 `app.ts` は `./native-router/mod.ts` というコードをimportして利用しています。このコードは下記のサイトからダウンロードしました。
 
 - https://deno.land/x/nativerouter@1.0.0
 
-記事 link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae[Native Router in Deno]が Deno native-routerを 解説しています。わたしはこの記事を読み `./native-router/mod.ts` を利用して `app.ts` を書きました。以下、`app.ts` のコードについて説明していきます。
+記事 link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae["Native Router in Deno"]がnative-routerライブラリについて解説しています。わたしはこの記事を読み `./native-router/mod.ts` を使って `app.ts` を書きました。
+
+以下、`app.ts` の中身をユースケース毎に分けて説明していきます。
 
 ==== パラメータつきGETリクエストに応答するケース
 
@@ -144,7 +146,7 @@ if (response.status === 200) {
 }
 ----
 
-このTypeScriptコードはHTTP POSTリクエストを投げます。リクエストのbodyのなかに `name` パラメータに値 `Ippei` を指定しています。これを実行すると下記のメッセージが表示される。
+このTypeScriptコードはHTTP POSTリクエストを投げます。リクエストのbodyのなかにFormデータとして `name` パラメータと値 `Ippei` を渡しています。これを実行すると下記のメッセージが表示される。
 
 [source]
 ----
@@ -166,7 +168,91 @@ RequestオブジェクトのなかからFormデータを読み出し、`name` �
 
 === URLのPathがパラメータ化されているリクエストに応答するケース
 
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/hello/dekopin");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/hello/dekopin` にたいしてHTTP GETリクエストを投げます。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+Hello, dekopin
+----
+
+URLパス `/hello/dekopin` の二番目の階層にあたる文字列 `dekopin` がパラメータの値として解釈されています。URLパスが `/hello/yoshinobu` ならば、応答はこうなるでしょう。
+
+[source]
+----
+Hello, yoshinobu
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=29..31]
+----
+
+Routerクラスは内部においてURLPatternクラスを利用しています。
+- link:https://deno.land/api@v1.39.1?s=URLPattern[Deno Runtime API / URLPattern]
+
+さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
+- link:https://github.com/pillarjs/path-to-regexp[GitHub pillarjs / path-to-regexp]
+
+path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。例を示しましょう。
+
+image:images/6_path-to-regexp.png[]
+
+path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
+
 === HTMLファイルを応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/fetch_basic.html");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/fetch_basic.html` にたいしてHTTP GETリクエストを投げます。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript本格入門</title>
+  </head>
+  <body>
+    <input id='btn' type="button" value="print message in console"/>
+    <script type="text/javascript" src="scripts/fetch_basic.js"></script>
+  </body>
+</html>
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=39..42]
+----
+
+`fetch_basic.html` はWebサーバーのディスク上に在るHTMLファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
 
 === JSファイルを応答するケース
 
