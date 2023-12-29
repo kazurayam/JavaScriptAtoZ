@@ -509,3 +509,178 @@ path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という�
     });
 
 `book.json` はWebサーバーのディスク上に在るJSONファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
+
+## 本格本のサンプルコードを補足する
+
+[《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略する）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを、TypeScriptで書き、Denoで実行することを試みて成功しました。以下に説明します。本格本を補足できればいいなと思っています。
+
+コードは下記にあります。
+
+-   [src/chap10/fetch](https://github.com/kazurayam/JavaScriptAtoZ/tree/develop/src/chap10/fetch)
+
+まずWebサーバを起動することから始めましょう。
+
+    $ cd <projectディレクトリ>/src/chap10/fetch
+    $ ./serve-start.sh
+    Listening on http://localhost:3000/
+
+シェルスクリプト `serve-start.sh` の中身は下記のとおり。
+
+    deno run --allow-net --allow-read --allow-write --allow-env serve.ts
+
+TypeScriptファイル `serve.ts` をDenoで実行しています。`serve.ts` の中身は下記の通り。
+
+    // deno-native-router at https://deno.land/x/nativerouter@1.0.0
+
+    import { Router } from "./native-router/mod.ts";
+    import { serve } from "https://deno.land/std/http/mod.ts";
+    import Logger from "https://deno.land/x/logger@v1.1.3/logger.ts";
+    import { readerFromStreamReader } from "https://deno.land/std/streams/reader_from_stream_reader.ts";
+
+    const logger = new Logger()
+
+    const router = new Router();
+
+    router.get("/", async (req: Request, params: Record<string, string>) => {
+            // the name "params" is based on the famous JavaScript library
+            // [path-to-regexp](https://github.com/pillarjs/path-to-regexp), which works
+            // behind the URLPattern class
+        const html = await Deno.readTextFile("./index.html");
+        return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
+    });
+
+
+    router.get("/:htmlfile.html", async (req: Request, params: Record<string, string>) => {
+        logger.info(`htmlfile: ${params.htmlfile}`);
+        try {
+            const html = await Deno.readTextFile(`${params.htmlfile}.html`);
+            return new Response(html, { headers: {"content-type": "text/html; charset=utf-8"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+    router.get("/scripts/:jsfile", async (req: Request, params: Record<string, string>) => {
+        logger.info(`params.jsfile: ${params.jsfile}`);
+        try {
+            const js = await Deno.readTextFile(`scripts/${params.jsfile}`);
+            return new Response(js, { headers: {"content-type": "text/javascript"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+
+    // the doc of URLPattern --- https://developer.mozilla.org/en-US/docs/Web/API/URLPattern/URLPattern
+    router.get("/:jsonfile.json", async (req: Request, params: Record<string, string>) => {
+            logger.info(`jsonfile: ${params.jsonfile}`);
+            try {
+                const json = await Deno.readTextFile(`${params.jsonfile}.json`);
+                return new Response(json, { headers: {"content-type": "application/json"}});
+            } catch (e) {
+                logger.error(e.message);
+            }
+        });
+
+
+    router.get("/bookmark", async (req: Request, params: Record<string, string>) => {
+        try {
+            const u = new URL(req.url);
+            const bookmarkUrl = u.searchParams.get('url');
+            logger.info(`bookmarkUrl : ${bookmarkUrl}`);
+            let params = new URLSearchParams();
+            params.set('url', bookmarkUrl);
+            let text = '';
+            const resp = await fetch(`https://b.hatena.ne.jp/entry/jsonlite/?${params.toString()}`).
+                then(res => res.text());
+            return new Response(resp, 
+                { headers:{"Content-Type": "application/json"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+    router.get("/fetch_basic", async (req: Request, params: Record<string, string>) => {
+        try {
+            const u = new URL(req.url);
+            const name = u.searchParams.get('name');
+            let text = '';
+            if (name !== '') {
+                text = `こんにちは、${name}さん！`
+            }
+            return new Response(text, 
+                { headers:{"Content-Type": "text/plain; charset=utf-8"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+    router.post("/fetch_post", async (req: Request, params: Record<string, string>) => {
+        try {
+            const formData = await req.formData();
+            const name = formData.get('name');
+            let text = '';
+            if (name !== '') {
+                text = `こんにちは、${formData.get('name')}さん！`
+            }
+            return new Response(text, 
+                { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+    router.get("/fetch_query", async (req: Request, params: Record<string, string>) => {
+        try {
+            const u = new URL(req.url);
+            const name = u.searchParams.get('name');
+            let text = '';
+            if (name !== '') {
+                text = `こんにちは、${name}さん！`
+            }
+            return new Response(text, 
+                { headers:{"Content-Type": "text/plain; charset=utf-8"}});
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+    // https://medium.com/deno-the-complete-reference/handle-file-uploads-in-deno-ee14bd2b16d9
+    router.post("/fetch_upload", async (req: Request, params: Record<string, string>) => {
+        logger.info(`/fetch_upload ${req.url}`)
+        const SAVE_PATH = './uploaded/';
+        try {
+            const url = new URL(req.url);
+            const fileName = url.searchParams.get("filename") || crypto.randomUUID();
+            if (!req.body) {
+                return new Response(null, { status: 400});
+            }
+            const reader = req?.body?.getReader();
+            const f = await Deno.open(SAVE_PATH + fileName, {
+                create: true,
+                write: true,
+            });
+            await Deno.copy(readerFromStreamReader(reader), f);
+            await f.close();
+            return new Response(`saved ${fileName}`);
+        } catch (e) {
+            logger.error(e.message);
+        }
+    });
+
+
+    async function reqHandler(req: Request) {
+        console.log(`\n[serve.ts#reqHandler] Request:  ${req.method} ${req.url}`);
+        return await router.route(req);
+    }
+    serve(reqHandler, { port: 3000 });
+
+前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしたものです。
+
+Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
+
+![7 index](http://kazurayam.github.io/JavaScriptAtoZ/image/7_index.png)
+
+ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
+
+《FIN》

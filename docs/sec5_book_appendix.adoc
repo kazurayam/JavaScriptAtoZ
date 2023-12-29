@@ -1,0 +1,39 @@
+== 本格本のサンプルコードを補足する
+
+link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略する）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを、TypeScriptで書き、Denoで実行することを試みて成功しました。以下に説明します。本格本を補足できればいいなと思っています。
+
+コードは下記にあります。
+
+- link:https://github.com/kazurayam/JavaScriptAtoZ/tree/develop/src/chap10/fetch[src/chap10/fetch]
+
+まずWebサーバを起動することから始めましょう。
+
+[source]
+----
+$ cd <projectディレクトリ>/src/chap10/fetch
+$ ./serve-start.sh
+Listening on http://localhost:3000/
+----
+
+シェルスクリプト `serve-start.sh` の中身は下記のとおり。
+
+[source]
+----
+include::../src/chap10/fetch/serve-start.sh[]
+----
+
+TypeScriptファイル `serve.ts` をDenoで実行しています。`serve.ts` の中身は下記の通り。
+
+[source]
+----
+include::../src/chap10/fetch/serve.ts[]
+----
+
+前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしたものです。
+
+Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
+
+image:http://kazurayam.github.io/JavaScriptAtoZ/image/7_index.png[]
+
+ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
+
