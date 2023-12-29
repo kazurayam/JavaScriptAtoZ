@@ -163,13 +163,13 @@ Denoをカーネルとして選択しよう。すると `console.log(…​)` �
 
 以上で、VSCodeのなかでJupyterを動かし、TypeScriptのコードを書き、Denoカーネルで実行できるようになった。
 
-## TypeScriptで素朴なWebサーバを書こう
+## TypeScriptで素朴なWebサーバを書いた
 
 わたしが何をしたいかというと、[《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し適切なファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
 
 -   [Native Router in Deno](https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae)
 
-ぴったりだった。この記事もとづきWebサーバを自作した。コードが全部で１５０行程度と短く初心者のわたしでも理解できる。これを以下で説明する。
+ぴったりだった。この記事もとづきWebサーバを自作した。ソースコードは全部で１５０行程度。短い。初心者のわたしでも全部理解できる。これを以下で説明する。
 
 ### ソースコードのありか
 
@@ -268,7 +268,7 @@ Webサーバをどうやって停止するか？ `./appstart.sh` を実行した
 
 以下、`app.ts` の中身をユースケース毎に分けて説明していきます。
 
-#### パラメータつきGETリクエストに応答するケース
+#### クエリーつきGETリクエストに応答するケース
 
 -   クライアント `apptest.ipynb` のコード
 
@@ -305,7 +305,7 @@ Webサーバをどうやって停止するか？ `./appstart.sh` を実行した
 
 RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を [`URL`](https://deno.land/api@v1.39.1?s=URL) に変換する。URLクエリーが `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出す。
 
-### パラメータつきPOSTリクエストに応答するケース
+#### POSTリクエストに応答するケース
 
 -   クライアント `apptest.ipynb` のコード
 
@@ -349,7 +349,7 @@ RequestオブジェクトのなかからFormデータを読み出し、`name` �
 
 -   [Deno Runtime API / HTTP Server API / Inspecting the incoming request](https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request)
 
-### URLのPathがパラメータ化されているリクエストに応答するケース
+#### URLのPathがパラメータ化されているリクエストに応答するケース
 
 -   クライアント `apptest.ipynb` のコード
 
@@ -393,7 +393,7 @@ path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列
 
 path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
 
-### HTMLファイルを応答するケース
+#### HTMLファイルを応答するケース
 
 -   クライアント `apptest.ipynb` のコード
 
@@ -407,7 +407,7 @@ path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という�
         console.log(response);
     }
 
-このTypeScriptコードはURLパス `/fetch_basic.html` にたいしてHTTP GETリクエストを投げます。これを実行すると下記のメッセージが表示される。
+このTypeScriptコードはURLパス `/fetch_basic.html` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
 
     <html>
       <head>
@@ -433,6 +433,79 @@ path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という�
 
 `fetch_basic.html` はWebサーバーのディスク上に在るHTMLファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
 
-### JSファイルを応答するケース
+#### JSファイルを応答するケース
 
-### JSONファイルを応答するケース
+-   クライアント `apptest.ipynb` のコード
+
+<!-- -->
+
+    const response = await fetch("http://localhost:3000/scripts/fetch_basic.js");
+    if (response.status === 200) {
+        const text = await response.text();
+        console.log(text);
+    } else {
+        console.log(response);
+    }
+
+このTypeScriptコードはURLパス `/fetch_basic.js` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
+
+    let btn = document.querySelector('#btn');
+    btn.addEventListener('click', function() {
+        fetch('book.json')
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('unable to access the specified resource');
+            })
+            .then(data => console.log(data.title))
+            .catch(e => window.alert(e.message));
+    }, false);
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+-   Webサーバ `app.ts` のコード
+
+<!-- -->
+
+    router.get("/scripts/:filename.js", async (req: Request, params: Record<string, string>) => {
+        const html = await Deno.readTextFile(`scripts/${params.filename}.js`);
+        return new Response(html, { headers: {"content-type": "application/javascript; charset=utf-8"}});
+    });
+
+`fetch_basic.js` はWebサーバーのディスク上に在るJavaScriptファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
+
+#### JSONファイルを応答するケース
+
+-   クライアント `apptest.ipynb` のコード
+
+<!-- -->
+
+    const response = await fetch("http://localhost:3000/book.json");
+    if (response.status === 200) {
+        const text = await response.text();
+        console.log(text);
+    } else {
+        console.log(response);
+    }
+
+このTypeScriptコードはURLパス `/book.json` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
+
+    {
+      "title": "JavaScript本格入門",
+      "price": 3200,
+      "publisher": "技術評論社"
+    }
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+-   Webサーバ `app.ts` のコード
+
+<!-- -->
+
+    router.get("/:filename.json", async (req: Request, params: Record<string, string>) => {
+        const html = await Deno.readTextFile(`${params.filename}.json`);
+        return new Response(html, { headers: {"content-type": "application/json; charset=utf-8"}});
+    });
+
+`book.json` はWebサーバーのディスク上に在るJSONファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
