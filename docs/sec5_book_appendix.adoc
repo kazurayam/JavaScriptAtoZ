@@ -22,18 +22,19 @@ Listening on http://localhost:3000/
 include::../src/chap10/fetch/serve-start.sh[]
 ----
 
-TypeScriptファイル `serve.ts` をDenoで実行しています。`serve.ts` の中身は下記の通り。
+TypeScriptファイル `serve.ts` をDenoで実行しています。
+
+Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/7_index.png[]
+
+ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
+
+`serve.ts` の中身は下記の通り。
 
 [source]
 ----
 include::../src/chap10/fetch/serve.ts[]
 ----
 
-前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしたものです。
-
-Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
-
-image:http://kazurayam.github.io/JavaScriptAtoZ/image/7_index.png[]
-
-ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
-
+前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしています。

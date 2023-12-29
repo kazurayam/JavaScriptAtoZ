@@ -1,7 +1,7 @@
 - Table of contents
 {:toc}
 
-# JavaScriptのFetch APIを学ぶためにDenoでWebサーバを作った話 --- VSCodeでJupyterを使って
+# Fetch APIを学ぶためにDenoでWebサーバを作った
 
 ここで説明するコード一式をGitHubで公開しています。
 
@@ -15,13 +15,13 @@
 
 -   [《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）
 
-を読んだ。この本を読んでJavaScriptをすこし深く学ぶことができた。ただし本格本にひとつ不満があった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、本格本はPHP言語によるWebサーバの実装例を紹介していた。残念ながらわたしはPHPがわからない。JavaScriptを学ぶのにPHPも学ばなければならないのはつらい …​ そうだ、[Deno](https://qiita.com/search?q=Deno) があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
+を読んだ。この本を読んでJavaScriptを深く学ぶことができた。ただし本格本にひとつ不満があった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、PHP言語によるWebサーバの実装例が紹介されていた。わたしはPHPがわからない。JavaScriptを学ぶのにPHPも合わせて学ばなければならないのはつらい …​ そうだ、[Deno](https://qiita.com/search?q=Deno) があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
 
 第二の動機。2023年9月にDeno 1.37がリリースされて、JupyterカーネルとしてDenoが選べるようになった。
 
 -   [Deno 1.37: Modern JavaScript in Jupyter Notebooks](https://deno.com/blog/v1.37)
 
-VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができるのだが、DenoがJupyterカーネルとして使えるということは、.ipynb ファイルにTypeScriptのコードを書き、Ctrl+Enterで素早く実行して、結果をJupyterのなかで見ることができる。この道具は魅力的だ。Jupyterカーネルとしての Deno を使ってみよう。
+VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができる。DenoがJupyterカーネルとして使えるならば、ipynb ファイルにTypeScriptのコードを書き、Ctrl+Enterで素早く実行して、結果をJupyterのなかで見ることができる。この道具は魅力的だ。Jupyterカーネルとしての Deno を使ってみよう。
 
 ## 作業環境を作る
 
@@ -60,13 +60,13 @@ VS Codeに拡張モジュールをインストールすれば、JupyterでNotebo
 
 -   VSCodeに [Jupyter拡張](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)がインストール済み
 
-この環境をあなたがすでに持っている前提します。つまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される。
+この環境をあなたがすでに持っている前提します。つまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterが開く。JupyterのセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される。こんなふうに
 
 <figure>
 <img src="https://kazurayam.github.io/JavaScriptAtoZ/images/1_Jupyter_Python_VSCode.png" alt="1 Jupyter Python VSCode" />
 </figure>
 
-この環境をどうやって作ればいいのか？検索すれば参考になる記事がたくさんある。Qiitaとかをそちらを参考にしてください。
+この環境をどうやって作ればいいのか？検索すれば参考になる記事がたくさん見つかる。そちらを参考にしてください。
 
 ### Denoの本体をインストールする
 
@@ -97,13 +97,13 @@ VSCodeのなかでTypeScriptコードをDenoで実行したい。そのために
     3. Ensure deno is available in the environment path, or set its path via the deno.path setting in VSCode.
     4. Open the VS Code command palette with Ctrl+Shift+P, and run the Deno: Initialize Workspace Configuration command.
 
-項番4として "run the Deno: Initialize Workspace Configuraiton Command" と書いてあるがこれでは何のことやら。すこし先にこう書いてある。
+項番4として "run the Deno: Initialize Workspace Configuraiton Command" と書いてあるが何のことやら？少し先にこう書いてある。
 
 > We recognize that not every TypeScript/JavaScript project that you might work on in VSCode uses Deno — therefore, by default, this extension will only apply the Deno language server when the setting deno.enable is set to true. This can be done via editing the settings or using the command Deno: Initialize Workspace Configuration.
 >
 > While you can enable Deno globally, you probably only want to do that if every JavaScript/TypeScript workspace you work on in VSCode is a Deno based one.
 
-つまり、TypeScript含むプロジェクトをVSCodeで開いたとき、そのプロジェクトにおいてあなたがDenoを使うとはかぎらない、とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にする必要がある。これをやってはじめてVSCodeとDenoの連携が有効化される。
+あなたがTypeScript含むプロジェクトをVSCodeで開いたときDenoを使うとはかぎらない(Nodeを選ぶかもしれない)とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にする必要がある。この設定を施してはじめてVSCodeとDenoの連携が有効化される。
 
 <figure>
 <img src="https://kazurayam.github.io/JavaScriptAtoZ/images/2_VSCode_Settings_Deno.Enable.png" alt="2 VSCode Settings Deno.Enable" />
@@ -211,9 +211,7 @@ Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあ�
 
 ![5.1 Simplest Request and Response failure](https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png)
 
-おっと、エラーになりました。まだWebサーバを立ち上げていなかったから。
-
-Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+おっと、エラーになりました。まだWebサーバを立ち上げていなかったから、当然こうなる。Webサーバを起動しよう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
     $ cd <プロジェクトのディレクトリ>/src/chap10/fetch
     $ ./appstart.sh
@@ -256,7 +254,7 @@ Webサーバをどうやって停止するか？ `./appstart.sh` を実行した
     }
     serve(reqHandler, { port: 3000 });
 
-`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` というメッセージを応答する、ただそれだけのことをしています。
+`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` と応答する、ただそれだけのことをしています。
 
 #### Native Routerライブラリ in Deno
 
@@ -303,7 +301,7 @@ Webサーバをどうやって停止するか？ `./appstart.sh` を実行した
                             { headers:{"Content-Type": "text/plain; charset=utf-8"}});
     });
 
-RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を [`URL`](https://deno.land/api@v1.39.1?s=URL) に変換する。URLクエリーが `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出す。
+RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を [`URL`](https://deno.land/api@v1.39.1?s=URL)オブジェクトに変換する。URLクエリーつまり `name=decoy` がURLオブジェクトの `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出しています。
 
 #### POSTリクエストに応答するケース
 
@@ -345,7 +343,7 @@ RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれ
                             { headers: {"Content-Type": "text/plain; charset=utf-8"}});
     });
 
-RequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
+POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
 
 -   [Deno Runtime API / HTTP Server API / Inspecting the incoming request](https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request)
 
@@ -387,9 +385,9 @@ Routerクラスは内部においてURLPatternクラスを利用しています�
 さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
 - [GitHub pillarjs / path-to-regexp](https://github.com/pillarjs/path-to-regexp)
 
-path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。例を示しましょう。
+path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。path-to-regexpの使用例を下記に示す。
 
-![6 path to regexp](images/6_path-to-regexp.png)
+![6 path to regexp](https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png)
 
 path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
 
@@ -528,7 +526,15 @@ path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という�
 
     deno run --allow-net --allow-read --allow-write --allow-env serve.ts
 
-TypeScriptファイル `serve.ts` をDenoで実行しています。`serve.ts` の中身は下記の通り。
+TypeScriptファイル `serve.ts` をDenoで実行しています。
+
+Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
+
+![7 index](https://kazurayam.github.io/JavaScriptAtoZ/images/7_index.png)
+
+ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
+
+`serve.ts` の中身は下記の通り。
 
     // deno-native-router at https://deno.land/x/nativerouter@1.0.0
 
@@ -675,12 +681,6 @@ TypeScriptファイル `serve.ts` をDenoで実行しています。`serve.ts` �
     }
     serve(reqHandler, { port: 3000 });
 
-前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしたものです。
-
-Webサーバが立ち上がったところで、任意のWebブラウザを開き URL `http://localhost:3000` にアクセスします。下記のような画面が表示されるはず。
-
-![7 index](http://kazurayam.github.io/JavaScriptAtoZ/image/7_index.png)
-
-ここに表示されたリンクは、本格本の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたサンプルコードに基づいており、実際に動作することを確認済みです。本格本にJavaScriptとHTMLにかんして十分な解説がされていますからそちらを参照願います。
+前述した `app.ts` と同様に Deno Native Router ライブラリを使ってRequestに反応してResponseを返すコードを束にしています。
 
 《FIN》

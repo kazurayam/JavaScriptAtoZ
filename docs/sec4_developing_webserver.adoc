@@ -50,9 +50,7 @@ Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあ�
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png[]
 
-おっと、エラーになりました。まだWebサーバを立ち上げていなかったから。
-
-Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+おっと、エラーになりました。まだWebサーバを立ち上げていなかったから、当然こうなる。Webサーバを起動しよう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
 [source]
 ----
@@ -84,7 +82,7 @@ include::../src/chap10/fetch/app.ts[lines=1..17]
 include::../src/chap10/fetch/app.ts[lines=54..59]
 ----
 
-`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` というメッセージを応答する、ただそれだけのことをしています。
+`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` と応答する、ただそれだけのことをしています。
 
 ==== Native Routerライブラリ in Deno
 
@@ -125,7 +123,7 @@ Hello, decoy
 include::../src/chap10/fetch/app.ts[lines=7..17]
 ----
 
-RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を link:https://deno.land/api@v1.39.1?s=URL[`URL`] に変換する。URLクエリーが `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出す。
+RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を link:https://deno.land/api@v1.39.1?s=URL[`URL`]オブジェクトに変換する。URLクエリーつまり `name=decoy` がURLオブジェクトの `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出しています。
 
 ==== POSTリクエストに応答するケース
 
@@ -161,7 +159,7 @@ Hello, Ippei
 include::../src/chap10/fetch/app.ts[lines=18..27]
 ----
 
-RequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
+POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
 
 - link:https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request[Deno Runtime API / HTTP Server API / Inspecting the incoming request]
 
@@ -208,9 +206,9 @@ Routerクラスは内部においてURLPatternクラスを利用しています�
 さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
 - link:https://github.com/pillarjs/path-to-regexp[GitHub pillarjs / path-to-regexp]
 
-path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。例を示しましょう。
+path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。path-to-regexpの使用例を下記に示す。
 
-image:images/6_path-to-regexp.png[]
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png[]
 
 path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
 

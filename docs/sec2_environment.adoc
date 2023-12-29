@@ -37,11 +37,11 @@ traitlets        : 5.13.0
 
 - VSCodeに link:https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter[Jupyter拡張]がインストール済み
 
-この環境をあなたがすでに持っている前提します。つまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される。
+この環境をあなたがすでに持っている前提します。つまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterが開く。JupyterのセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される。こんなふうに
 
 image::https://kazurayam.github.io/JavaScriptAtoZ/images/1_Jupyter_Python_VSCode.png[]
 
-この環境をどうやって作ればいいのか？検索すれば参考になる記事がたくさんある。Qiitaとかをそちらを参考にしてください。
+この環境をどうやって作ればいいのか？検索すれば参考になる記事がたくさん見つかる。そちらを参考にしてください。
 
 === Denoの本体をインストールする
 
@@ -81,7 +81,7 @@ VSCodeのなかでTypeScriptコードをDenoで実行したい。そのために
 4. Open the VS Code command palette with Ctrl+Shift+P, and run the Deno: Initialize Workspace Configuration command.
 ----
 
-項番4として "run the Deno: Initialize Workspace Configuraiton Command" と書いてあるがこれでは何のことやら。すこし先にこう書いてある。
+項番4として "run the Deno: Initialize Workspace Configuraiton Command" と書いてあるが何のことやら？少し先にこう書いてある。
 
 [quote]
 ____
@@ -90,7 +90,7 @@ We recognize that not every TypeScript/JavaScript project that you might work on
 While you can enable Deno globally, you probably only want to do that if every JavaScript/TypeScript workspace you work on in VSCode is a Deno based one.
 ____
 
-つまり、TypeScript含むプロジェクトをVSCodeで開いたとき、そのプロジェクトにおいてあなたがDenoを使うとはかぎらない、とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にする必要がある。これをやってはじめてVSCodeとDenoの連携が有効化される。
+あなたがTypeScript含むプロジェクトをVSCodeで開いたときDenoを使うとはかぎらない(Nodeを選ぶかもしれない)とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にする必要がある。この設定を施してはじめてVSCodeとDenoの連携が有効化される。
 
 image::https://kazurayam.github.io/JavaScriptAtoZ/images/2_VSCode_Settings_Deno.Enable.png[]
 

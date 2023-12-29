@@ -6,10 +6,10 @@
 
 - link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）
 
-を読んだ。この本を読んでJavaScriptをすこし深く学ぶことができた。ただし本格本にひとつ不満があった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、本格本はPHP言語によるWebサーバの実装例を紹介していた。残念ながらわたしはPHPがわからない。JavaScriptを学ぶのにPHPも学ばなければならないのはつらい ... そうだ、link:https://qiita.com/search?q=Deno[Deno] があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
+を読んだ。この本を読んでJavaScriptを深く学ぶことができた。ただし本格本にひとつ不満があった。《10.4 非同期通信の基本を理解する - Fetch API》のサンプルコードを実行するのにWebサーバを立てる必要があるのだが、PHP言語によるWebサーバの実装例が紹介されていた。わたしはPHPがわからない。JavaScriptを学ぶのにPHPも合わせて学ばなければならないのはつらい ... そうだ、link:https://qiita.com/search?q=Deno[Deno] があるじゃないか と思った。WebサーバをTypeScriptで書き、クライアントをJavaScriptで書こう。やってみよう。
 
 第二の動機。2023年9月にDeno 1.37がリリースされて、JupyterカーネルとしてDenoが選べるようになった。
 
 - link:https://deno.com/blog/v1.37[Deno 1.37: Modern JavaScript in Jupyter Notebooks]
 
-VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができるのだが、DenoがJupyterカーネルとして使えるということは、.ipynb ファイルにTypeScriptのコードを書き、Ctrl+Enterで素早く実行して、結果をJupyterのなかで見ることができる。この道具は魅力的だ。Jupyterカーネルとしての Deno を使ってみよう。
+VS Codeに拡張モジュールをインストールすれば、JupyterでNotebookファイルを作りコードを素早く実行することができる。DenoがJupyterカーネルとして使えるならば、ipynb ファイルにTypeScriptのコードを書き、Ctrl+Enterで素早く実行して、結果をJupyterのなかで見ることができる。この道具は魅力的だ。Jupyterカーネルとしての Deno を使ってみよう。
