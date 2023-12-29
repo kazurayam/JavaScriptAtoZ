@@ -4,14 +4,15 @@
 
 わたしのマシンは MacBook Air M1、OSは macOS Sonoma 14.2.1 です。WindowsでもLinuxでも同じことができるはずですが、わたしは検証していません。以下のツールがインストール済みで実行可能であると仮定します。
 
-1. Pythonがインストール済み
+1. Pythonがインストール済みで、コマンドラインでバージョンを確認できる。
+
 [source]
 ----
 $ python --version
 Python 3.11.5
 ----
 
-2. Jupyter Notebookがインストール済み
+2. Jupyter Notebookがインストール済みで、コマンドラインでバージョンを確認できる。
 
 [source]
 ----
@@ -32,13 +33,15 @@ qtconsole        : not installed
 traitlets        : 5.13.0
 ----
 
-3. Microsoft Visual Studio Codeがインストール済み
+3. Microsoft Visual Studio Codeがインストール済みで起動できる。
 
 4. VSCodeに link:https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter[Jupyter拡張]がインストール済み
 
 ということはつまり、あなたが自分のマシンでVSCodeを起動し、ファイル名拡張子が `.ipynb` であるNotebookファイルを作りダブルクリックすればJupyterで開く、JupyterセルにPythonコードをひとつ書いて、Ctrl+EnterすればPythonカーネルによってコードが実行されて、メッセージが表示される、という状態すなわち下記のような環境がすでにあると仮定します。
 
 image::https://kazurayam.github.io/JavaScriptAtoZ/images/1_Jupyter_Python_VSCode.png[]
+
+この環境の作り方を説明する記事がインターネット上にたくさんある。そちらを参考にしてください。
 
 === Denoの本体をインストールする
 
@@ -87,14 +90,14 @@ We recognize that not every TypeScript/JavaScript project that you might work on
 While you can enable Deno globally, you probably only want to do that if every JavaScript/TypeScript workspace you work on in VSCode is a Deno based one.
 ____
 
-つまり、TypeScript含むプロジェクトをVSCodeで開いたとき、そのプロジェクトにおいてあなたがDenoを使うとはかぎらない、とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にしよう。これをやってはじめてVSCodeとDenoの連携が有効化される。
+つまり、TypeScript含むプロジェクトをVSCodeで開いたとき、そのプロジェクトにおいてあなたがDenoを使うとはかぎらない、とDeno Extensionの開発者は考えた。だからDeno ExtensionをVSCodeにインストールしただけではVSCodeとDenoとは連携しない。VSCodeのSettingsを開き Workspaceの `deno.enable` を `true` にする必要がある。これをやってはじめてVSCodeとDenoの連携が有効化される。
 
 image::https://kazurayam.github.io/JavaScriptAtoZ/images/2_VSCode_Settings_Deno.Enable.png[]
 
 
-=== Jupyter連携モジュールをDenoに追加する
+=== Jupyterと連携するためのモジュールをDenoに追加する
 
-前述のとおりVSCodeのなかでDenoを使えるようにした。さらに一歩進んでVSCodeの中で動くJupyterがDenoをカーネルの一つとして使えるようにしたい。そのためにはDenoに拡張モジュールを追加する必要があります。わたしはこうやりました。
+以上でVSCodeのなかでDenoを使えるようになった。さらに一歩進もう。VSCodeの中で動くJupyterがDenoをカーネルの一つとして使えるようにしたい。そのためにはDenoに拡張モジュールを追加する必要がある。わたしはこうやりました。
 
 [source]
 ----

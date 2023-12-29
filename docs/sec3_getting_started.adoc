@@ -44,5 +44,6 @@ Hello, world!
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/4.6_Hello.png[]
 
+できた！
 
 以上で、VSCodeのなかでJupyterを動かし、TypeScriptのコードを書き、Denoカーネルで実行できるようになった。
