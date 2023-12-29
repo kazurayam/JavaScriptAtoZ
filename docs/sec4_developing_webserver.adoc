@@ -33,7 +33,7 @@ $ tree .
 
 === 最初の一歩
 
-VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、こういうTypeScriptコードを書いた。
+VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルのあたりに下記のTypeScriptコードがあります。
 
 [source]
 ----
@@ -46,11 +46,13 @@ if (response.status === 200) {
 }
 ----
 
-Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあげる。応答を受けとったらHTTPステータスを調べる。ステータスが200正常ならば応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。やっていることは以上。CTRLとENTERキーを同時に押して実行してみよう。
+Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあげる。応答を受けたらHTTPステータスを調べる。ステータスが200正常ならば、応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。コードのセルを選択した状態でCTRLとENTERキーを同時に押そう。JupyterがコードをDenoに渡す。コードが実行される。Webサーバが応答を返すはずだ。
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png[]
 
-エラーになりました。まだWebサーバを立ち上げていなかったから。では Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+おっと、エラーになりました。まだWebサーバを立ち上げていなかったから。
+
+Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
 [source]
 ----
@@ -84,7 +86,7 @@ include::../src/chap10/fetch/app.ts[lines=54..59]
 
 `"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` というメッセージを応答する、ただそれだけのことをしています。
 
-=== Deno native-router
+==== Deno Native Routerライブラリ
 
 `app.ts` は `./native-router/mod.ts` というコードをimportして利用しています。このコードは下記のサイトからダウンロードしました。
 
@@ -92,15 +94,7 @@ include::../src/chap10/fetch/app.ts[lines=54..59]
 
 記事 link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae[Native Router in Deno]が Deno native-routerを 解説しています。わたしはこの記事を読み `./native-router/mod.ts` を利用して `app.ts` を書きました。以下、`app.ts` のコードについて説明していきます。
 
-=== パラメータつきGETリクエストに応答する
-
-- Webサーバ `app.ts` のコード
-[source]
-----
-include::../src/chap10/fetch/app.ts[lines=7..17]
-----
-
-Requestのなかに `?name=値` の形で埋め込まれた値を取り出しています。URL文字列を link:https://deno.land/api@v1.39.1?s=URL[`URL`] に変換し、`searchParams` プロパティのなかから `name` プロパティの値を取り出しています。
+==== パラメータつきGETリクエストに応答するケース
 
 - クライアント `apptest.ipynb` のコード
 [source]
@@ -114,20 +108,67 @@ if (response.status === 200) {
 }
 ----
 
-- クライアントを実行した結果
+このTypeScriptコードはFetch APIを使ってHTTP GETリクエストを投げます。URLのなかにクエリー文字列 `?name=decopy` が埋め込まれていることに注意。これを実行すると下記のメッセージが表示される。
 
 [source]
 ----
 Hello, decoy
 ----
 
-=== パラメータつきPOSTリクエストに応答する
+このリクエストに応答するのはWebサーバの下記のコードです。
 
-=== URLのPathがパラメータ化されているリクエストに応答する
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=7..17]
+----
 
-=== HTMLファイルを応答する
+RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を link:https://deno.land/api@v1.39.1?s=URL[`URL`] に変換する。URLクエリーが `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出す。
 
-=== JSファイルを応答する
+=== パラメータつきPOSTリクエストに応答するケース
 
-=== JSONファイルを応答する
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const formData = new FormData();
+formData.set('name', 'Ippei');
+const response = await fetch("http://localhost:3000/hello", {
+    method: 'POST',
+    body: formData,
+})
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはHTTP POSTリクエストを投げます。リクエストのbodyのなかに `name` パラメータに値 `Ippei` を指定しています。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+Hello, Ippei
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=18..27]
+----
+
+RequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
+
+- link:https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request[Deno Runtime API / HTTP Server API / Inspecting the incoming request]
+
+
+=== URLのPathがパラメータ化されているリクエストに応答するケース
+
+=== HTMLファイルを応答するケース
+
+=== JSファイルを応答するケース
+
+=== JSONファイルを応答するケース
 
