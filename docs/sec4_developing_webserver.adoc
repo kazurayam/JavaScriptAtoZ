@@ -1,0 +1,331 @@
+== TypeScriptで素朴なWebサーバを書いた
+
+わたしが何をしたいかというと、link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し適切なファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
+
+- link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae[Native Router in Deno]
+
+ぴったりだった。この記事もとづきWebサーバを自作した。ソースコードは全部で１５０行程度。短い。初心者のわたしでも全部理解できる。これを以下で説明する。
+
+=== ソースコードのありか
+
+ここで説明するコード一式をGitHubで公開しています。
+
+- link:https://github.com/kazurayam/JavaScriptAtoZ/tree/develop/src/chap10/fetch[src/chap10/fetch]
+
+[source]
+----
+$ tree .
+.
+├── app.ts
+├── appstart.sh
+├── apptest.ipynb
+├── book.json
+├── ...
+├── fetch_basic.html
+├── ...
+├── index.html
+├── native-router
+│   └── mod.ts
+├── scripts
+│   ├── ...
+│   ├── fetch_basic.js
+----
+
+=== 最初の一歩
+
+VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルのあたりに下記のTypeScriptコードがあります。
+
+[source]
+----
+const response = await fetch("http://localhost:3000/hello");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあげる。応答を受けたらHTTPステータスを調べる。ステータスが200正常ならば、応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。コードのセルを選択した状態でCTRLとENTERキーを同時に押そう。JupyterがコードをDenoに渡す。コードが実行される。Webサーバが応答を返すはずだ。
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png[]
+
+おっと、エラーになりました。まだWebサーバを立ち上げていなかったから、当然こうなる。Webサーバを起動しよう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+
+[source]
+----
+$ cd <プロジェクトのディレクトリ>/src/chap10/fetch
+$ ./appstart.sh
+----
+
+シェルスクリプトの中身は一行だけで、TypeScirpt ファイル `app.ts` を `deno` で実行しています。
+
+[source]
+----
+include::../src/chap10/fetch/appstart.sh[]
+----
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.2_Simplest_Request_and_Response_success.png[]
+
+今度は、Webサーバが "Hello" と応答してくれました。
+
+Webサーバをどうやって停止するか？ `./appstart.sh` を実行したのと同じTerminalウインドウで CTRLキーとCキーを押下してプロセスをkillします。
+
+=== Webサーバのソースコードを読む
+
+`http://localhost:3000/hello` をGETするHTTPリクエストに応答したのはTypeスクリプト `app.ts` の下記の部分です。
+
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=1..17]
+
+include::../src/chap10/fetch/app.ts[lines=54..59]
+----
+
+`"/hello"` というURLPatternにマッチするHTTPリクエストがWebサーバに到来したら `Hello` と応答する、ただそれだけのことをしています。
+
+==== Native Routerライブラリ in Deno
+
+`app.ts` は `./native-router/mod.ts` というコードをimportして利用しています。このコードは下記のサイトからダウンロードしました。
+
+- https://deno.land/x/nativerouter@1.0.0
+
+記事 link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae["Native Router in Deno"]がnative-routerライブラリについて解説しています。わたしはこの記事を読み `./native-router/mod.ts` を使って `app.ts` を書きました。
+
+以下、`app.ts` の中身をユースケース毎に分けて説明していきます。
+
+==== クエリーつきGETリクエストに応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/hello?name=decoy");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはFetch APIを使ってHTTP GETリクエストを投げます。URLのなかにクエリー文字列 `?name=decopy` が埋め込まれていることに注意。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+Hello, decoy
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=7..17]
+----
+
+RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を link:https://deno.land/api@v1.39.1?s=URL[`URL`]オブジェクトに変換する。URLクエリーつまり `name=decoy` がURLオブジェクトの `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出しています。
+
+==== POSTリクエストに応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const formData = new FormData();
+formData.set('name', 'Ippei');
+const response = await fetch("http://localhost:3000/hello", {
+    method: 'POST',
+    body: formData,
+})
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはHTTP POSTリクエストを投げます。リクエストのbodyのなかにFormデータとして `name` パラメータと値 `Ippei` を渡しています。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+Hello, Ippei
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=18..27]
+----
+
+POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
+
+- link:https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request[Deno Runtime API / HTTP Server API / Inspecting the incoming request]
+
+
+==== URLのPathがパラメータ化されているリクエストに応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/hello/dekopin");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/hello/dekopin` にたいしてHTTP GETリクエストを投げます。これを実行すると下記のメッセージが表示される。
+
+[source]
+----
+Hello, dekopin
+----
+
+URLパス `/hello/dekopin` の二番目の階層にあたる文字列 `dekopin` がパラメータの値として解釈されています。URLパスが `/hello/yoshinobu` ならば、応答はこうなるでしょう。
+
+[source]
+----
+Hello, yoshinobu
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=29..31]
+----
+
+Routerクラスは内部においてURLPatternクラスを利用しています。
+- link:https://deno.land/api@v1.39.1?s=URLPattern[Deno Runtime API / URLPattern]
+
+さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
+- link:https://github.com/pillarjs/path-to-regexp[GitHub pillarjs / path-to-regexp]
+
+path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列を受け取ってそれと意味的に等価な正規表現を生成します。path-to-regexpの使用例を下記に示す。
+
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png[]
+
+path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
+
+==== HTMLファイルを応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/fetch_basic.html");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/fetch_basic.html` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
+
+[source]
+----
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript本格入門</title>
+  </head>
+  <body>
+    <input id='btn' type="button" value="print message in console"/>
+    <script type="text/javascript" src="scripts/fetch_basic.js"></script>
+  </body>
+</html>
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=39..42]
+----
+
+`fetch_basic.html` はWebサーバーのディスク上に在るHTMLファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
+
+==== JSファイルを応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/scripts/fetch_basic.js");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/fetch_basic.js` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
+
+[source]
+----
+let btn = document.querySelector('#btn');
+btn.addEventListener('click', function() {
+    fetch('book.json')
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw new Error('unable to access the specified resource');
+        })
+        .then(data => console.log(data.title))
+        .catch(e => window.alert(e.message));
+}, false);
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=44..47]
+----
+
+`fetch_basic.js` はWebサーバーのディスク上に在るJavaScriptファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
+
+==== JSONファイルを応答するケース
+
+- クライアント `apptest.ipynb` のコード
+[source]
+----
+const response = await fetch("http://localhost:3000/book.json");
+if (response.status === 200) {
+    const text = await response.text();
+    console.log(text);
+} else {
+    console.log(response);
+}
+----
+
+このTypeScriptコードはURLパス `/book.json` にたいしてHTTP GETリクエストを投げます。これを実行すると下記の内容が表示される。
+
+[source]
+----
+{
+  "title": "JavaScript本格入門",
+  "price": 3200,
+  "publisher": "技術評論社"
+}
+----
+
+このリクエストに応答するのはWebサーバの下記のコードです。
+
+- Webサーバ `app.ts` のコード
+[source]
+----
+include::../src/chap10/fetch/app.ts[lines=49..52]
+----
+
+`book.json` はWebサーバーのディスク上に在るJSONファイルです。Webサーバはこのファイルをディスクから読み取ってクライアントに応答します。
+
