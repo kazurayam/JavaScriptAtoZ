@@ -3,6 +3,10 @@
 
 # JavaScriptのFetch APIを学ぶためにDenoでWebサーバを作った話 --- VSCodeでJupyterを使って
 
+ここで説明するコード一式をGitHubで公開しています。
+
+-   [src/chap10/fetch](https://github.com/kazurayam/JavaScriptAtoZ/tree/develop/src/chap10/fetch)
+
 ## 動機
 
 わたしは [Deno](https://deno.com/) を触り始めてまだ１ヶ月の初心者です。Denoについて自分用のメモを書こうとおもう。最初に動機を述べる。
@@ -115,9 +119,9 @@ VSCodeのなかでTypeScriptコードをDenoで実行したい。そのために
 
 -   [Denoで動かすJupyterプロジェクト](https://qiita.com/KokiSakano/items/60c53a1b1b113d3711c2)(Qiita, @KokiSakano)
 
-## 最初の一歩: VSCodeのなかJupyterでTypeScriptコードを書きDenoで実行しよう
+## 最初の一歩: VSCodeのなかでJupyterでTypeScriptコードを書きDenoで実行しよう
 
-VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。手順を説明しよう。
+VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。以下、手順を説明する。
 
 VSCodeを起動し適当なフォルダを開く。そこにNotebookを作る。ファイル名はなんでもいいのだがここでは `test.ipynb` としよう。`ipynb` ファイルをダブルクリックするとJupyterが立ち上がり、Notebookを編集可能な状態になる。
 
@@ -161,7 +165,7 @@ Denoをカーネルとして選択しよう。すると `console.log(…​)` �
 
 ## TypeScriptで素朴なWebサーバを書こう
 
-わたしな何を達成したいのかというと、[《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し、適切にファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
+わたしが何をしたいかというと、[《改訂３版 JavaScript本格入門》](https://gihyo.jp/book/2023/978-4-297-13288-0)（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し適切なファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
 
 -   [Native Router in Deno](https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae)
 
@@ -193,11 +197,13 @@ Denoをカーネルとして選択しよう。すると `console.log(…​)` �
 
 ### 最初の一歩
 
-VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、CTRLとENTERキーを同時に押してTypeScriptを実行しましょう。
+VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、CTRLとENTERキーを同時に押してTypeScriptを実行してみよう。
 
-![5.1 Simplest Request and Response failure](https://kazurayam.github.io/images/5.1_Simplest_Request_and_Response_failure.png)
+![5.1 Simplest Request and Response failure](https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png)
 
-エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったからエラーになるのは当然です。Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったから。
+
+Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
     $ cd <プロジェクトのディレクトリ>/src/chap10/fetch
     $ ./appstart.sh

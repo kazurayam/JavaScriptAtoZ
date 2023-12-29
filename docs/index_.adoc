@@ -2,6 +2,10 @@
 
 :projectVersion: 0.0.0
 
+ここで説明するコード一式をGitHubで公開しています。
+
+- link:https://github.com/kazurayam/JavaScriptAtoZ/tree/develop/src/chap10/fetch[src/chap10/fetch]
+
 include::sec1_motivation.adoc[]
 
 include::sec2_environment.adoc[]

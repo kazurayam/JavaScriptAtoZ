@@ -1,6 +1,6 @@
 == TypeScriptで素朴なWebサーバを書こう
 
-わたしな何を達成したいのかというと、link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し、適切にファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
+わたしが何をしたいかというと、link:https://gihyo.jp/book/2023/978-4-297-13288-0[《改訂３版 JavaScript本格入門》]（山田祥寛 著 2023年2月 技術評論社 刊、以下で「本格本」と略記）の《10.4 非同期通信の基本を理解する - Fetch API》に掲載されたHTTPクライアントとしてのJavaScriptを実行するのに必要なWebサーバを自分で書きたい。Denoで動かしたい。HTTPリクエストのURLとパラメータを解析し適切なファイルを選んで応答できればいい。どういうコードを書けばいいのだろう？元ネタはないかしら？とネットで漁ったら、この記事を見つけた。
 
 - link:https://medium.com/deno-the-complete-reference/native-router-in-deno-16595970daae[Native Router in Deno]
 
@@ -33,11 +33,13 @@ $ tree .
 
 === 最初の一歩
 
-VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、CTRLとENTERキーを同時に押してTypeScriptを実行しましょう。
+VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイルはJupyterのNotebookファイルです。`Simplest Request and Response` と題したセルを選択し、CTRLとENTERキーを同時に押してTypeScriptを実行してみよう。
 
-image:https://kazurayam.github.io/images/5.1_Simplest_Request_and_Response_failure.png[]
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png[]
 
-エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったからエラーになるのは当然です。Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったから。
+
+Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
 [source]
 ----

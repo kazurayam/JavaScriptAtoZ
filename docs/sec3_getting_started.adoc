@@ -1,6 +1,6 @@
-== 最初の一歩: VSCodeのなかJupyterでTypeScriptコードを書きDenoで実行しよう
+== 最初の一歩: VSCodeのなかでJupyterでTypeScriptコードを書きDenoで実行しよう
 
-VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。手順を説明しよう。
+VSCodeでJupyterを開きNotebookファイルをひとつ作ろう。そこにごく短いTypeScriptコードを書こう。そのコードをDenoで実行して結果を見よう。以下、手順を説明する。
 
 VSCodeを起動し適当なフォルダを開く。そこにNotebookを作る。ファイル名はなんでもいいのだがここでは `test.ipynb` としよう。`ipynb` ファイルをダブルクリックするとJupyterが立ち上がり、Notebookを編集可能な状態になる。
 
