@@ -39,7 +39,7 @@ image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and
 
 エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったから。
 
-Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+では Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
 [source]
 ----
@@ -54,7 +54,7 @@ $ ./appstart.sh
 include::../src/chap10/fetch/appstart.sh[]
 ----
 
-image:https://kazurayam.github.io/images/5.2_Simplest_Request_and_Response_success.png[]
+image:https://kazurayam.github.io/JavaScriptAtoZ/images/5.2_Simplest_Request_and_Response_success.png[]
 
 今度は、Webサーバが応答してくれました。
 

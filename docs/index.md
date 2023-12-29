@@ -203,7 +203,7 @@ VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイル�
 
 エラーになりました。`http://loocalhost:3000` でWebサーバが立ち上がっていることを期待しているのに、まだWebサーバを立ち上げていなかったから。
 
-Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
+では Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き、`src/chap10/fetch` ディレクトリにcdします。そして シェルスクリプト `appstart.sh` を実行します。
 
     $ cd <プロジェクトのディレクトリ>/src/chap10/fetch
     $ ./appstart.sh
@@ -212,7 +212,7 @@ Webサーバを起動しましょう。VSCodeのTerminalウインドウを開き
 
     deno run --allow-net --allow-read --allow-write --allow-env app.ts
 
-![5.2 Simplest Request and Response success](https://kazurayam.github.io/images/5.2_Simplest_Request_and_Response_success.png)
+![5.2 Simplest Request and Response success](https://kazurayam.github.io/JavaScriptAtoZ/images/5.2_Simplest_Request_and_Response_success.png)
 
 今度は、Webサーバが応答してくれました。
 
