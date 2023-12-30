@@ -345,7 +345,7 @@ RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれ
 
 POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。
 
-クライアントとWebサーバがどちらもTypeScriptで書いてあって、どちらも\[FormData\](<https://deno.land/api@v1.39.1?s=FormData>) クラス を使っている。習うことが少なくて嬉しい。クライアントがJavaScriptでWebサーバがPHPといように異言語混成だと２つの流儀を習わなければならず面倒だ。
+クライアントとWebサーバがどちらもTypeScriptで書いてあって、どちらも\[FormData\](<https://deno.land/api@v1.39.1?s=FormData>) クラス を使っている。習うことが少なくて嬉しい。クライアントがJavaScriptでWebサーバがPHPというように異言語混成だと２つの流儀を習わなければならず面倒だ。
 
 サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
 
@@ -393,7 +393,7 @@ path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列
 
 ![6 path to regexp](https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png)
 
-path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。
+path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。へえ、なるほど、感心しました。
 
 #### HTMLファイルを応答するケース
 
