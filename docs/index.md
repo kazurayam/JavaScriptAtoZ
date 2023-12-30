@@ -207,7 +207,7 @@ VSCodeで `src/chap10/fetch/apptest.ipynb` を開きます。このファイル�
         console.log(response);
     }
 
-Fetch APIを介して `http://localhost:3000/` にHTTP GETリクエストをあげる。応答を受けたらHTTPステータスを調べる。ステータスが200正常ならば、応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。コードのセルを選択した状態でCTRLとENTERキーを同時に押そう。JupyterがコードをDenoに渡す。コードが実行される。Webサーバが応答を返すはずだ。
+Fetch APIを介して `http://localhost:3000/hello` にHTTP GETリクエストをあげる。応答を受けたらHTTPステータスを調べる。ステータスが200正常ならば、応答のボディ部分のテキストをconsoleに表示する。ステータスが200正常でなかったらResponseオブジェクトそのままconsoleに表示する。コードのセルを選択した状態でCTRLとENTERキーを同時に押そう。JupyterがコードをDenoに渡す。コードが実行される。Webサーバが応答を返すはずだ。
 
 ![5.1 Simplest Request and Response failure](https://kazurayam.github.io/JavaScriptAtoZ/images/5.1_Simplest_Request_and_Response_failure.png)
 
@@ -301,7 +301,7 @@ Webサーバをどうやって停止するか？ `./appstart.sh` を実行した
                             { headers:{"Content-Type": "text/plain; charset=utf-8"}});
     });
 
-RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を [`URL`](https://deno.land/api@v1.39.1?s=URL)オブジェクトに変換する。URLクエリーつまり `name=decoy` がURLオブジェクトの `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出しています。
+RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれた値を取り出しています。まずURL文字列を [URL](https://deno.land/api@v1.39.1?s=URL) オブジェクトに変換する。`name=decoy` がURLオブジェクトの `searchParams` プロパティに変換されているので、そのなかから `name` プロパティの値を取り出しています。
 
 #### POSTリクエストに応答するケース
 
@@ -343,7 +343,11 @@ RequestのなかにURLクエリーつまり `?name=値` の形で埋め込まれ
                             { headers: {"Content-Type": "text/plain; charset=utf-8"}});
     });
 
-POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
+POSTリクエストによって渡されたRequestオブジェクトのなかからFormデータを読み出し、`name` パラメータの値 `Ippei` を取り出しています。
+
+クライアントとWebサーバがどちらもTypeScriptで書いてあって、どちらも\[FormData\](<https://deno.land/api@v1.39.1?s=FormData>) クラス を使っている。習うことが少なくて嬉しい。クライアントがJavaScriptでWebサーバがPHPといように異言語混成だと２つの流儀を習わなければならず面倒だ。
+
+サーバが受けたRequestオブジェクトを処理するやり方については下記のドキュメントが参考になります。
 
 -   [Deno Runtime API / HTTP Server API / Inspecting the incoming request](https://docs.deno.com/runtime/manual/runtime/http_server_apis#inspecting-the-incoming-request)
 
@@ -379,7 +383,7 @@ URLパス `/hello/dekopin` の二番目の階層にあたる文字列 `dekopin` 
         return new Response(`Hello, ${params.name}!`, 
                             { headers: {"content-type": "text/plain; charset=utf-8"}});
 
-Routerクラスは内部においてURLPatternクラスを利用しています。
+Routerクラスがgetメソッドの第２引数としての無名関数の第二引数としてRecordオブジェクトを引き渡してくれる。このRecordオブジェクトのなかに `name` の値が `decopin` だという情報が入っている。唐突な感じだがすごく便利だ。どうなっているのか？Routerクラスは内部においてURLPatternクラスを利用しています。
 - [Deno Runtime API / URLPattern](https://deno.land/api@v1.39.1?s=URLPattern)
 
 さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
@@ -389,7 +393,7 @@ path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列
 
 ![6 path to regexp](https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png)
 
-path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。すごく便利ですね。
+path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。
 
 #### HTMLファイルを応答するケース
 
