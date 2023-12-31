@@ -97,7 +97,7 @@ image::https://kazurayam.github.io/JavaScriptAtoZ/images/2_VSCode_Settings_Deno.
 
 === Jupyterと連携するためのモジュールをDenoに追加する
 
-以上でVSCodeのなかでDenoを使えるようになった。さらに一歩進もう。VSCodeの中で動くJupyterがDenoをカーネルの一つとして使えるようにしたい。そのためにはDenoに拡張モジュールを追加する必要がある。わたしはこうやりました。
+以上でVSCodeのなかでDenoを使えるようになった。さらに一歩進もう。VSCodeの中で動くJupyterがDenoをカーネルの一つとして使わせてくれるようにしたい。そのためにはDenoに拡張モジュールを追加する必要がある。わたしはこうやりました。
 
 [source]
 ----
