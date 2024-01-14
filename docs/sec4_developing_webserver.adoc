@@ -203,7 +203,7 @@ Hello, yoshinobu
 ----
 include::../src/chap10/fetch/app.ts[lines=29..31]
 ----
-Routerクラスがgetメソッドの第２引数としての無名関数の第二引数としてRecordオブジェクトを引き渡してくれる。このRecordオブジェクトのなかに `name` の値が `decopin` だという情報が入っている。唐突な感じだがすごく便利だ。どうなっているのか？Routerクラスは内部においてURLPatternクラスを利用しています。
+Routerクラスがgetメソッドの第２引数としての無名関数の第二引数としてRecordオブジェクトを引き渡してくれる。このRecordオブジェクトのなかに `name` の値が `dekopin` だという情報が入っている。唐突な感じだがすごく便利だ。どうなっているのか？Routerクラスは内部においてURLPatternクラスを利用しています。
 - link:https://deno.land/api@v1.39.1?s=URLPattern[Deno Runtime API / URLPattern]
 
 さらに分け入るならば、URLPatternは path-to-regexp ライブラリを利用しています。
@@ -213,7 +213,7 @@ path-to-regexpはたとえば `"/hello/:name"` のようなパターン文字列
 
 image:https://kazurayam.github.io/JavaScriptAtoZ/images/6_path-to-regexp.png[]
 
-path-to-regexpが生成されした正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。へえ、なるほど、感心しました。
+path-to-regexpが生成した正規表現を `"/hello/dekopin"` という文字列に適用すれば、パラメータ `name` に該当する値として `dekopin` という文字列が取り出されました。へえ、なるほど、感心しました。
 
 ==== HTMLファイルを応答するケース
 
