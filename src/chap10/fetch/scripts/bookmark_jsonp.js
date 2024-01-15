@@ -1,16 +1,16 @@
 // bookmark_jsonp.js
-let result = document.querySelector('#result');
+const result = document.querySelector('#result');
 document.querySelector('#btn').addEventListener('click', function() {
-    let params = new URLSearchParams();
+    const params = new URLSearchParams();
     params.set('url', document.querySelector('#url').value);
     result.textContent = '通信中...';
     fetchJsonp(`https://b.hatena.ne.jp/entry/jsonlite/?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
-            let ul = document.createElement('ul');
-            for (let bm of data.bookmarks) {
-                let li = document.createElement('li');
-                let anchor = document.createElement('a');
+            const ul = document.createElement('ul');
+            for (const bm of data.bookmarks) {
+                const li = document.createElement('li');
+                const anchor = document.createElement('a');
                 anchor.href = 'https://b.hatena.ne.jp/${bm.comment}';
                 anchor.textContent = `${bm.user} ${bm.comment}`;
                 li.append(anchor);
