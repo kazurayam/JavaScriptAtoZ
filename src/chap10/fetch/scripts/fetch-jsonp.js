@@ -15,8 +15,8 @@ function clearFunction(functionName) {
   // http://stackoverflow.com/a/1824228/751089
   try {
     delete window[functionName];
-  } catch (e) {
-    window[functionName] = undefined;
+  } catch (_e) {
+    self[functionName] = undefined;
   }
 }
 

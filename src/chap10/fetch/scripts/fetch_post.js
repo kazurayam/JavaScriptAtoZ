@@ -1,6 +1,6 @@
-let result = document.querySelector("#result");
-document. querySelector("#myform").addEventListener('click', function(e) {
-  let data = new FormData(document.querySelector("#myform"));
+const result = document.querySelector("#result");
+document. querySelector("#myform").addEventListener('click', function(_e) {
+  const data = new FormData(document.querySelector("#myform"));
   fetch(`fetch_post`, {
         method: 'POST',
         body: data,

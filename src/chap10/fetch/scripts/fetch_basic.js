@@ -1,4 +1,4 @@
-let btn = document.querySelector('#btn');
+const btn = document.querySelector('#btn');
 btn.addEventListener('click', function() {
     fetch('book.json')
         .then(res => {
