@@ -5,6 +5,7 @@ import { serve } from "https://deno.land/std/http/mod.ts";
 import Logger from "https://deno.land/x/logger@v1.1.3/logger.ts";
 import { readerFromStreamReader } from "https://deno.land/std/streams/reader_from_stream_reader.ts";
 import { STATUS_CODE } from "https://deno.land/std@0.212.0/http/status.ts";
+import { existsSync } from "https://deno.land/std/fs/mod.ts";
 
 const logger = new Logger()
 
@@ -152,6 +153,9 @@ router.post("/fetch_upload", async (req: Request, _params: Record<string, string
             return new Response(null, { status: 400});
         }
         const reader = req?.body?.getReader();
+        if (!existsSync(SAVE_PATH)) {
+            await Deno.mkdir(SAVE_PATH)
+        }
         const f = await Deno.open(SAVE_PATH + fileName, {
             create: true,
             write: true,
