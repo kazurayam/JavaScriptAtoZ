@@ -10,7 +10,10 @@ function asyncProcess(value) {
   });
 }
 
-asyncProcess('徳次郎')
+Promise.race([
+  asyncProcess('篤二郎'),
+  asyncProcess(''),
+  asyncProcess('凛々')
+])
   .then(response => console.log(response))
-  .catch(error => console.log(`error: ${error}`))
-  .finally(() => console.log('finished'));
+  .catch(error => console.log(`エラー: $(error)`));
